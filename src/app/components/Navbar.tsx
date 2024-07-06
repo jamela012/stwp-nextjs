@@ -66,14 +66,11 @@ export const Navbar = () => {
                     <Link href="/announcements" className='mx-2 hover:text-gray-300'>
                         Announcements
                     </Link>
-                    <Link href="/about" className='mx-2 hover:text-gray-300'>
+                    <Link href="/about-us" className='mx-2 hover:text-gray-300'>
                         About Us
                     </Link>
-                    <Link href="/contact" className='mx-2 hover:text-gray-300'>
+                    <Link href="/contact-us" className='mx-2 hover:text-gray-300'>
                         Contact Us
-                    </Link>
-                    <Link href="/login" className='mx-2 hover:text-gray-300'>
-                        Login
                     </Link>
                 </div>
 
@@ -96,3 +93,5 @@ export const Navbar = () => {
         </nav>
     )
 }
+
+

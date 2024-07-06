@@ -1,5 +1,7 @@
-import { Navbar } from "./components/Navbar";
-
 export default function Home() {
-  return "WELCOME";
+  return (
+    <div className="flex justify-center items-center h-screen">
+      <h1 className="text-white">Shephed the Wedding Planner</h1>
+  </div>
+  );
 }
