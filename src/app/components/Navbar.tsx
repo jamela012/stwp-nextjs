@@ -1,9 +1,12 @@
 'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { usePathname } from "next/navigation";
 
 export const Navbar = () => {
+    const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
 
     function getMenuClasses() {
@@ -44,18 +47,22 @@ export const Navbar = () => {
         window.removeEventListener('resize', handleResize);
         };
     }, []);
+    
+    if (pathname.startsWith("/admin")) {
+        return null;
+    }
 
     return (
         <nav className='bg-white text-black p-4 sm:p-6 md:justify-between md:items-center'>
             <div className="container mx-auto flex justify-between items-center">
-                <a href="" className="text-2xl font-bold">
+                <Link href="/" className="text-2xl font-bold">
                     <Image 
                         src="/shepherd-the-wedding-planner-logo.jpg"
                         width={100}
                         height={100}
                         alt='Shepherd the Wedding Planner'
                     />
-                </a>
+                </Link>
                 <div className={getMenuClasses()}>
                     <Link href="/" className='mx-2 hover:text-gray-300'>
                         Home
