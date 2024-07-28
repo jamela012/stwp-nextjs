@@ -4,7 +4,7 @@ const config: Config = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}"
   ],
   theme: {
     extend: {
@@ -15,9 +15,13 @@ const config: Config = {
       },
       colors: {
         'logo-color': 'rgba(235,61,0,0.8)'
+      },
+      height: {
+        '500': '500px',
       }
     },
   },
   plugins: [],
 };
+
 export default config;
