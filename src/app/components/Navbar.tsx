@@ -8,16 +8,17 @@ import { usePathname } from "next/navigation";
 export const Navbar = () => {
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
 
     function getMenuClasses() {
         let menuClasses = [];
 
-        if(isOpen) {
+        if (isOpen) {
             menuClasses = [
                 'flex',
                 'absolute',
                 'top-[80px]',
-                'bg-white',
+                'bg-transparent',
                 'text-black',
                 'w-full',
                 'p-4',
@@ -25,35 +26,60 @@ export const Navbar = () => {
                 'left-0',
                 'gap-10',
                 'flex-col'
-            ]
+            ];
         } else {
             menuClasses = ['hidden', 'md:flex'];
         }
 
         return menuClasses.join(" ");
-    };
+    }
 
     // Effect to handle window resize and close the menu on larger screens
     useEffect(() => {
         const handleResize = () => {
-        if (window.innerWidth >= 768) {
-            setIsOpen(false);
-        }
+            if (window.innerWidth >= 768) {
+                setIsOpen(false);
+            }
         };
 
         window.addEventListener('resize', handleResize);
 
         return () => {
-        window.removeEventListener('resize', handleResize);
+            window.removeEventListener('resize', handleResize);
         };
     }, []);
-    
+
+    // Effect to handle scroll effect based on pathname
+    useEffect(() => {
+        if (pathname === "/") {
+            const handleScroll = () => {
+                const isScrolled = window.scrollY > 0;
+                if (isScrolled !== scrolled) {
+                    setScrolled(isScrolled);
+                }
+            };
+
+            window.addEventListener('scroll', handleScroll);
+
+            return () => {
+                window.removeEventListener('scroll', handleScroll);
+            };
+        } else {
+            setScrolled(false); // Ensure background color is set correctly if not on home page
+        }
+    }, [pathname, scrolled]);
+
     if (pathname.startsWith("/admin")) {
         return null;
     }
 
+    const linkClass = (path:string) => {
+        const baseClasses = `mx-2 hover:text-logo-color transition-all duration-3 ease-in-out ${pathname === path ? 'border-b-2 border-logo-color text-logo-color' : (scrolled || pathname !== '/' ? 'text-black' : 'text-white')}`;
+        return baseClasses;
+    };
+
     return (
-        <nav className='bg-white text-black p-4 sm:p-6 md:justify-between md:items-center'>
+        <nav className={`text-black p-2 sm:p-3 md:flex md:justify-between md:items-center fixed w-full z-50 ${pathname === '/' ? (scrolled ? 'bg-white text-black' : 'bg-transparent text-white') : 'bg-white text-black'}`}>
             <div className="container mx-auto flex justify-between items-center">
                 <Link href="/" className="text-2xl font-bold">
                     <Image 
@@ -63,20 +89,24 @@ export const Navbar = () => {
                         alt='Shepherd the Wedding Planner'
                     />
                 </Link>
-                <div className={getMenuClasses()}>
-                    <Link href="/" className='mx-2 hover:text-gray-300'>
+
+                <div className={`${getMenuClasses()} nav-link flex`}>
+                    <Link href="/" className={linkClass('/')}>
                         Home
                     </Link>
-                    <Link href="/services" className='mx-2 hover:text-gray-300'>
+                    <Link href="/services" className={linkClass('/services')}>
                         Services
                     </Link>
-                    <Link href="/announcements" className='mx-2 hover:text-gray-300'>
+                    <Link href="/gallery" className={linkClass('/gallery')}>
+                        Gallery
+                    </Link>
+                    <Link href="/announcements" className={linkClass('/announcements')}>
                         Announcements
                     </Link>
-                    <Link href="/about-us" className='mx-2 hover:text-gray-300'>
+                    <Link href="/about-us" className={linkClass('/about-us')}>
                         About Us
                     </Link>
-                    <Link href="/contact-us" className='mx-2 hover:text-gray-300'>
+                    <Link href="/contact-us" className={linkClass('/contact-us')}>
                         Contact Us
                     </Link>
                 </div>
@@ -93,12 +123,9 @@ export const Navbar = () => {
                             <div className={`bg-black h-[2px] w-1/2 rounded transform transition-all duration-300 ${isOpen ? '-translate-x-10 opacity-0' : ''}`}></div>
                             <div className={`bg-black h-[2px] w-7 transform transition-all duration-300 origin-left ${isOpen ? '-rotate-[42deg]' : ''}`}></div>
                         </div>
-                    </button> 
+                    </button>
                 </div>
-
             </div>
         </nav>
-    )
+    );
 }
-
-
