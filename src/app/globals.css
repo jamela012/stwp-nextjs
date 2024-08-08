@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import 'react-calendar/dist/Calendar.css';
 
 :root {
   --foreground-rgb: 0, 0, 0;
@@ -44,4 +45,45 @@ body {
   .text-block {
     display: block;
   }
+
+  .react-calendar { 
+    width: 100%;
+    padding: 5px;
+    background-color: #fff;
+    color: #222;
+    border-radius: 8px;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 2.5em;
+  }
+
+  .calendar-tile {
+    @apply rounded-full transition-colors duration-200 ease-in-out h-16 m-5 leading-loose text-lg;
+  }
+
+  .calendar-tile:hover {
+    @apply bg-blue-50;
+  }
+
+  .calendar-tile--now {
+    @apply bg-blue-500 text-white;
+  }
+
+  .calendar-tile--active {
+    @apply bg-logo-color text-white;
+  }
+
+  .calendar-tile--disabled {
+    color: #a0a0a0; /* Gray text color */
+    background-color: transparent !important; /* No background color */
+}
+
+.calendar-tile--today {
+    color: blue !important;
+    background-color: transparent !important;
+}
+
+.calendar-tile--fully-booked {
+  color: #ffffff; /* White text color */
+  background-color: #ff4d4d8b !important; /* Red background color */
+}
 }
