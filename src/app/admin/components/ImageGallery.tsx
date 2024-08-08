@@ -73,11 +73,7 @@ export default function ImageGallery({ images, onDeleteImage, onUpdateImage }: I
         <div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {images.map((image) => (
-                    <div
-                        key={image.id}
-                        className="relative group overflow-hidden rounded-lg shadow-lg h-64 cursor-pointer"
-                        onClick={() => handleImageClick(image)}
-                    >
+                    <div key={image.id} className="relative group overflow-hidden rounded-lg shadow-lg h-64 cursor-pointer" onClick={() => handleImageClick(image)}>
                         <Image
                             src={image.url}
                             alt={`Group: ${image.group}`}
@@ -129,14 +125,8 @@ export default function ImageGallery({ images, onDeleteImage, onUpdateImage }: I
             </div>
 
             {previewImage && imageDimensions && (
-                <div
-                    className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
-                    onClick={handleClosePreview}
-                >
-                    <div
-                        className="relative max-w-full max-h-full flex flex-col items-center justify-center bg-white p-2"
-                        onClick={(e) => e.stopPropagation()}
-                    >
+                <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4" onClick={handleClosePreview}>
+                    <div className="relative max-w-full max-h-full flex flex-col items-center justify-center bg-white p-2" onClick={(e) => e.stopPropagation()}>
                         <IconButton
                             edge="end"
                             color="inherit"
@@ -168,20 +158,20 @@ export default function ImageGallery({ images, onDeleteImage, onUpdateImage }: I
             <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)} maxWidth="sm" fullWidth>
                 <DialogTitle>Edit Image Details</DialogTitle>
                 <DialogContent>
-                    <TextField
-                        label="Image Name"
-                        value={imageName}
-                        onChange={(e) => setImageName(e.target.value)}
-                        fullWidth
-                        margin="normal"
-                    />
-                    <TextField
-                        label="Group"
-                        value={imageGroup}
-                        onChange={(e) => setImageGroup(e.target.value)}
-                        fullWidth
-                        margin="normal"
-                    />
+                <TextField
+                    label="Image Name"
+                    value={imageName}
+                    onChange={(e) => setImageName(e.target.value)}
+                    fullWidth
+                    margin="normal"
+                />
+                <TextField
+                    label="Group"
+                    value={imageGroup}
+                    onChange={(e) => setImageGroup(e.target.value)}
+                    fullWidth
+                    margin="normal"
+                />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setEditDialogOpen(false)} color="secondary">
