@@ -1,16 +1,33 @@
-import type { Metadata } from "next";
-import AdminSideNav from "./components/AdminSideNav";
+'use client';
 
-export const metadata: Metadata = {
-    title: "Admin",
-    description: "Shepherd the Wedding Planner Admin Page",
-};
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../lib/firebase'; // Adjust the path as needed
+import AdminSideNav from './components/AdminSideNav';
 
-export default function AdminLayout({
-    children,
-}: Readonly<{
-    children: React.ReactNode;
-}>) {
+const AdminLayout = ({ children }: { children: React.ReactNode }) => {
+    const [loading, setLoading] = useState(true);
+    const [user, setUser] = useState<any>(null);
+    const router = useRouter();
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setUser(user);
+                setLoading(false);
+            } else {
+                router.push('authentication/admin-login'); // Redirect to login if not authenticated
+            }
+        });
+
+        return () => unsubscribe();
+    }, [router]);
+
+    if (loading) {
+        return <div className="p-4">Loading...</div>;
+    }
+
     return (
         <>
             <AdminSideNav />
@@ -22,4 +39,6 @@ export default function AdminLayout({
             </main>
         </>
     );
-}
+};
+
+export default AdminLayout;
