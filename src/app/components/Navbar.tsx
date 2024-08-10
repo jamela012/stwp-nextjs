@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { usePathname } from "next/navigation";
-import LoginForm from './Loginform';
+// import LoginForm from './Loginform';
 
 export const Navbar = () => {
     const pathname = usePathname();
