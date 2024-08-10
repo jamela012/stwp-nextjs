@@ -72,7 +72,7 @@ const CreateAnnouncementModal: FC<CreateAnnouncementModalProps> = ({ onClose, on
                     <div>
                         <label htmlFor="content" className="block text-sm font-medium text-gray-700">Content:</label>
                         <Editor
-                            apiKey={process.env.TINYMCE_API_KEY}
+                            apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}
                             value={content}
                             onEditorChange={(content) => setContent(content)}
                             init={{

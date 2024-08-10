@@ -146,7 +146,7 @@ const EditAnnouncementModal: FC<EditAnnouncementModalProps> = ({ announcement, o
                     <div className="mb-4">
                         <label htmlFor="editContent" className="block text-sm font-medium text-gray-700">Content:</label>
                         <Editor
-                            apiKey={process.env.TINYMCE_API_KEY}
+                            apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}
                             value={editContent}
                             onEditorChange={(content) => setEditContent(content)}
                             init={{
