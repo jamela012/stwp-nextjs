@@ -5,10 +5,11 @@ import { collection, query, where, getDocs } from 'firebase/firestore';
 interface TimeSlotProps {
     date: Date;
     onTimeSlotSelection: (timeSlot: string) => void;
+    disabled: boolean;
 }
 
-const TimeSlot = ({ date, onTimeSlotSelection }: TimeSlotProps) => {
-    const [slots, setSlots] = useState<string[]>([]);
+const TimeSlot = ({ date, onTimeSlotSelection, disabled }: TimeSlotProps) => {
+    const [slots, setSlots] = useState<{ time: string; disabled: boolean }[]>([]);
     const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
     const formatTime12Hour = (hour: number) => {
@@ -33,8 +34,10 @@ const TimeSlot = ({ date, onTimeSlotSelection }: TimeSlotProps) => {
     };
 
     const handleTimeSlotClick = (timeSlot: string) => {
-        setSelectedTime(timeSlot);
-        onTimeSlotSelection(timeSlot); // Pass the selected time back to AppointmentManager
+        if (!disabled) {
+            setSelectedTime(timeSlot);
+            onTimeSlotSelection(timeSlot); // Pass the selected time back to AppointmentManager
+        }
     };
 
     useEffect(() => {
@@ -44,14 +47,19 @@ const TimeSlot = ({ date, onTimeSlotSelection }: TimeSlotProps) => {
             const q = query(appointmentsRef, where('date', '==', dateStr));
             const querySnapshot = await getDocs(q);
 
-            const existingAppointments = querySnapshot.size;
+            // Create a map to track occupied slots
+            const occupiedSlots: Set<string> = new Set();
+            querySnapshot.forEach(doc => {
+                const appointment = doc.data();
+                const timeSlot = appointment.time;
+                occupiedSlots.add(timeSlot);
+            });
 
+            // Generate time slots and check if they are occupied
             const times = [];
             for (let hour = 9; hour <= 16; hour++) {
                 const time = formatTime12Hour(hour);
-                if (existingAppointments < 2) {
-                    times.push(time);
-                }
+                times.push({ time, disabled: occupiedSlots.has(time) });
             }
             setSlots(times);
         };
@@ -60,25 +68,29 @@ const TimeSlot = ({ date, onTimeSlotSelection }: TimeSlotProps) => {
     }, [date]);
 
     return (
-<div>
-    <h2 className="text-xl font-semibold mb-6">Available Time Slots for {date.toDateString()}</h2>
-    <ul className="space-y-2">
-        {slots.map(slot => (
-            <li
-                key={slot}
-                className={`cursor-pointer text-sm p-3 border rounded-lg shadow-sm transition-transform transform hover:scale-105 hover:bg-blue-50 ${
-                    selectedTime === slot ? 'bg-blue-100 border-blue-300' : 'border-gray-300'
-                }`}
-                onClick={() => handleTimeSlotClick(slot)}
-                role="button"
-                aria-pressed={selectedTime === slot}
-            >
-                {slot}
-            </li>
-        ))}
-    </ul>
-</div>
-
+        <div className="p-4 bg-white rounded-lg border shadow-md w-full">
+            <h2 className="text-xl font-semibold mb-6">Available Time Slots for {date.toDateString()}</h2>
+            <ul className="space-y-2">
+                {slots.map(({ time, disabled }) => (
+                    <li
+                        key={time}
+                        className={`cursor-pointer text-sm p-3 border rounded-lg shadow-sm transition-transform transform hover:scale-105 ${
+                            disabled
+                                ? 'bg-red-100 border-red-300 text-red-500'
+                                : selectedTime === time
+                                ? 'bg-blue-100 border-blue-300'
+                                : 'border-gray-300 hover:bg-blue-100'
+                        }`}
+                        onClick={() => handleTimeSlotClick(time)}
+                        role="button"
+                        aria-pressed={selectedTime === time}
+                        style={{ pointerEvents: disabled || disabled ? 'none' : 'auto' }} // Disable interactions if disabled
+                    >
+                        {time}
+                    </li>
+                ))}
+            </ul>
+        </div>
     );
 };
 

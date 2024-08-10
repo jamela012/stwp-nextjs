@@ -1,78 +1,24 @@
 'use client';
-
-import { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { db } from '@/app/lib/firebase';
-import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
-import AppointmentCalendar from './AppointmentCalendar';
-import TimeSlot from './TimeSlot';
-import AppointmentForm from './AppointmentForm';
+import { addDoc, collection } from 'firebase/firestore';
 import Swal from 'sweetalert2';
-import EventIcon from '@mui/icons-material/Event';
-import { CalendarToday } from '@mui/icons-material';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import { ArrowBack } from '@mui/icons-material';
-import Link from 'next/link';
+import { useDisabledDates } from './hooks/useDisabledDates';
+import AppointmentDetails from './AppointmentDetails';
+import AppointmentCalendarSection from './AppointmentCalendarSection';
+import AppointmentFormSection from './AppointmentFormSection';
+import TimeSlot from './TimeSlot';
+import { formatDateToFirestore } from './utils/dateUtils';
+import { v4 as uuidv4 } from 'uuid';
 
 const AppointmentManager = () => {
-    const [disabledDates, setDisabledDates] = useState<Set<string>>(new Set());
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [selectedTime, setSelectedTime] = useState<string | null>(null);
     const [showForm, setShowForm] = useState(false);
+    const [appointmentId, setAppointmentId] = useState<string>('');
+    const [loading, setLoading] = useState(false);
 
-    const formatDateToFirestore = (date: Date): string => {
-        const philippineOffset = 8 * 60; // Philippines is UTC+8
-        const localOffset = date.getTimezoneOffset();
-        const offsetDifference = philippineOffset - localOffset;
-
-        // Convert date to Philippine Time
-        const localDate = new Date(date.getTime() + offsetDifference * 60 * 1000);
-
-        // Set to midnight in Philippine time
-        localDate.setUTCHours(0, 0, 0, 0);
-
-        // Convert to local date string in YYYY-MM-DD format
-        return localDate.toISOString().split('T')[0];
-    };
-
-    useEffect(() => {
-        const fetchDisabledDates = async () => {
-            const appointmentsRef = collection(db, 'appointments');
-            const q = query(appointmentsRef);
-            const querySnapshot = await getDocs(q);
-
-            const dateCountMap: Record<string, number> = {};
-
-            querySnapshot.forEach(doc => {
-                const data = doc.data();
-                const dateStr = data.date;
-                if (!dateCountMap[dateStr]) {
-                    dateCountMap[dateStr] = 0;
-                }
-                dateCountMap[dateStr]++;
-            });
-
-            const disabled = new Set(
-                Object.keys(dateCountMap).filter(dateStr => dateCountMap[dateStr] >= 2)
-            );
-
-            setDisabledDates(disabled);
-        };
-
-        fetchDisabledDates();
-    }, []);
-
-    useEffect(() => {
-        // Close the form if the selected date is disabled
-        if (selectedDate && disabledDates.has(formatDateToFirestore(selectedDate))) {
-            setShowForm(false);
-            setSelectedTime(null); // Reset selected time when form is closed
-        }
-    }, [disabledDates, selectedDate]);
-
-    const updateDisabledDates = (newDisabledDates: Set<string>) => {
-        setDisabledDates(newDisabledDates);
-    };
+    const disabledDates = useDisabledDates();
 
     const handleDateClick = (date: Date | null) => {
         if (date) {
@@ -83,39 +29,48 @@ const AppointmentManager = () => {
                     title: 'Fully Booked',
                     text: 'This date is fully booked.',
                 });
-                setSelectedDate(null); // Clear the selected date if fully booked
-                setShowForm(false); // Ensure form is closed
+                setSelectedDate(null);
+                setSelectedTime(null);
+                setShowForm(false);
             } else {
                 setSelectedDate(date);
-                setSelectedTime(null); // Reset time selection
-                setShowForm(false); // Ensure form is closed when date is reselected
+                setSelectedTime(null);
+                setShowForm(false);
             }
         } else {
             setSelectedDate(null);
-            setSelectedTime(null); // Reset time selection
-            setShowForm(false); // Ensure form is closed
+            setSelectedTime(null);
+            setShowForm(false);
         }
     };
 
     const handleTimeSlotSelection = (timeSlot: string) => {
         if (selectedDate) {
+            const generatedId = uuidv4();
             setSelectedTime(timeSlot);
-            setShowForm(true); // Show the form when a time slot is selected
-            setSelectedTime(timeSlot); // Update the selected time state
+            setAppointmentId(generatedId);
+            setShowForm(true);
         }
     };
 
     const handleFormClose = () => {
         setShowForm(false);
-        setSelectedTime(null); // Reset selected time
+        setSelectedTime(null);
     };
 
-    const handleAppointmentSubmission = async (formData: any) => {
-        try {
-            const dateStr = formatDateToFirestore(selectedDate as Date);
+    const handleAppointmentSubmission = async (formData: any): Promise<void> => {
+        setLoading(true);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // Abort after 10 seconds
+        const retryAttempts = 3; // Number of times to retry sending email
+        let emailSent = false;
 
+        try {
+            // Save the appointment to Firestore
             await addDoc(collection(db, 'appointments'), {
-                date: dateStr,
+                id: formData.id,
+                status: 'scheduled',
+                date: formatDateToFirestore(new Date(formData.date)),
                 time: formData.time,
                 name: formData.name,
                 email: formData.email,
@@ -126,108 +81,137 @@ const AppointmentManager = () => {
                 receptionArea: formData.receptionArea,
                 numberOfGuests: formData.numberOfGuests,
                 message: formData.message,
+                createdAt: formData.createdAt,
             });
 
-            // Update the disabled dates
-            const appointmentsRef = collection(db, 'appointments');
-            const q = query(appointmentsRef);
-            const querySnapshot = await getDocs(q);
+            // Attempt to send the email with retries
+            for (let attempt = 0; attempt < retryAttempts; attempt++) {
+                try {
+                    const emailResponse = await fetch('/api/send-email', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            ...formData,
+                            date: formatDateToFirestore(new Date(formData.date)),
+                            time: formData.time,
+                            appointmentId: formData.id,
+                        }),
+                        signal: controller.signal,
+                    });
 
-            const dateCountMap: Record<string, number> = {};
-
-            querySnapshot.forEach(doc => {
-                const data = doc.data();
-                const dateStr = data.date;
-                if (!dateCountMap[dateStr]) {
-                    dateCountMap[dateStr] = 0;
+                    if (emailResponse.ok) {
+                        emailSent = true;
+                        break; // Exit retry loop if email is successfully sent
+                    } else {
+                        throw new Error('Failed to send email');
+                    }
+                } catch (error) {
+                    if (attempt === retryAttempts - 1) {
+                        throw error; // Throw error after final retry
+                    }
                 }
-                dateCountMap[dateStr]++;
-            });
+            }
 
-            const disabled = new Set(
-                Object.keys(dateCountMap).filter(dateStr => dateCountMap[dateStr] >= 2)
-            );
-
-            updateDisabledDates(disabled);
-
-            Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: 'Appointment booked successfully!',
-            });
+            // Display SweetAlert with user action for reload
+            if (emailSent) {
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Appointment booked successfully! A confirmation email has been sent.',
+                    confirmButtonText: 'Ok',
+                    didClose: () => {
+                        window.location.reload(); // Reload the page when the user clicks the button
+                    },
+                });
+            } else {
+                await Swal.fire({
+                    icon: 'warning',
+                    title: 'Appointment Booked',
+                    text: 'The appointment was successfully booked, but we failed to send the confirmation email. Please contact support.',
+                    confirmButtonText: 'Ok',
+                    didClose: () => {
+                        window.location.reload(); // Reload the page when the user clicks the button
+                    },
+                });
+            }
+    
         } catch (error) {
-            console.error('Error booking appointment:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Failed to book appointment.',
-            });
+            if (error instanceof Error) {
+                if (error.name === 'AbortError') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Submission Failed',
+                        text: 'The request timed out. Please try again later.',
+                        showConfirmButton: true,
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Submission Failed',
+                        text: 'Failed to book appointment. Please check your internet connection and try again later.',
+                        showConfirmButton: true,
+                    });
+                }
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Submission Failed',
+                    text: 'An unknown error occurred. Please try again later.',
+                    showConfirmButton: true,
+                });
+            }
+        } finally {
+            clearTimeout(timeoutId);
+            setLoading(false);
         }
     };
 
     return (
-        <div className="relative top-20">
+        <div className="relative top-20 p-4 md:p-6 lg:p-8">
+            {loading && (
+                <div className="absolute inset-0 bg-gray-700 bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="loader"></div>
+                    <p className="text-white text-lg">Submitting...</p>
+                </div>
+            )}
+
             <div className='mb-32'>
-                <div className="md:w-[80%] flex flex-col md:flex-row p-4 mx-auto flex-wrap">
-                    <div className="p-6 max-w-md mx-auto bg-white border rounded-lg flex flex-col justify-center space-y-4 relative">
-                        <div className="absolute top-5">
-                            <Link href={'/contact-us'}>
-                                <ArrowBack className='text-black' />
-                            </Link>
-                        </div>
-                        <div className="flex items-center space-x-2 pb-3 border-b">
-                            <h1 className="text-3xl font-bold text-gray-900">Shepherd The Wedding Planner</h1>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                            <CalendarToday className="text-gray-500 text-xl" />
-                            <h1 className="text-2xl font-semibold text-gray-800">Appointment</h1>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                            <AccessTimeIcon className="text-gray-500 text-xl" />
-                            <h3 className="text-base font-normal text-gray-700">1 hour</h3>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                            <LocationOnIcon className="text-gray-500 text-xl" />
-                            <h3 className="text-base font-normal text-gray-600">
-                                Q38F+C5Q Don Florencio Village, Gov. Antonio Carpio Rd, Batangas, 4200 Batangas
-                            </h3>
-                        </div>
-                        {/* Display selected date and time here */}
-                        {selectedDate && (
-                            <div className="flex items-center space-x-2">
-                                <EventIcon className="text-gray-500 text-xl" />
-                                <h3 className="text-base font-normal text-gray-600">
-                                    {selectedDate.toDateString()} {selectedTime && `at ${selectedTime}`}
-                                </h3>
-                            </div>
-                        )}
-                    </div>
-                    <div className="flex-1 bg-white p-4 rounded-lg border">
-                        <AppointmentCalendar
+                <div className='flex md:w-[80%] mx-auto flex-wrap md:flex-row flex-col'>
+                    <div className='flex flex-1 justify-center items-center'>
+                        <AppointmentDetails
                             selectedDate={selectedDate}
-                            setSelectedDate={setSelectedDate}
+                            selectedTime={selectedTime}
+                        />
+                    </div>
+                    <div className='flex-1'>
+                        <AppointmentCalendarSection
+                            selectedDate={selectedDate}
                             disabledDates={disabledDates}
-                            onDateClick={handleDateClick} // Pass handleDateClick to AppointmentCalendar
+                            onDateClick={handleDateClick}
+                            disabled={loading}
                         />
                     </div>
                     {selectedDate && !disabledDates.has(formatDateToFirestore(selectedDate)) && (
-                        <div className="flex-1 bg-white p-4 rounded-lg border">
+                        <div className='flex-1'>
                             <TimeSlot
                                 date={selectedDate}
                                 onTimeSlotSelection={handleTimeSlotSelection}
+                                disabled={loading}
                             />
                         </div>
                     )}
                 </div>
                 {showForm && selectedDate && selectedTime && (
-                    <div className="flex justify-end items-end">
-                        <AppointmentForm
-                            date={selectedDate}
-                            time={selectedTime}
-                            onClose={handleFormClose}
-                            onSubmit={handleAppointmentSubmission} // Pass onSubmit prop
-                        />
-                    </div>
+                    <AppointmentFormSection
+                        date={selectedDate}
+                        time={selectedTime}
+                        appointmentId={appointmentId}
+                        onClose={handleFormClose}
+                        onSubmit={handleAppointmentSubmission}
+                        disabled={loading}
+                    />
                 )}
             </div>
         </div>

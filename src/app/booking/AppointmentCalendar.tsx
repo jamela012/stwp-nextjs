@@ -1,14 +1,20 @@
-// AppointmentCalendar.tsx
 import Calendar, { CalendarProps } from 'react-calendar';
 
 interface AppointmentCalendarProps {
     selectedDate: Date | null;
     setSelectedDate: (date: Date | null) => void;
     disabledDates: Set<string>;
-    onDateClick: (date: Date | null) => void; // Allow null
+    onDateClick: (date: Date | null) => void;
+    disabled: boolean; // Add this line
 }
 
-const AppointmentCalendar = ({ selectedDate, setSelectedDate, disabledDates, onDateClick }: AppointmentCalendarProps) => {
+const AppointmentCalendar = ({
+    selectedDate,
+    setSelectedDate,
+    disabledDates,
+    onDateClick,
+    disabled // Add this line
+}: AppointmentCalendarProps) => {
 
     const formatDateToFirestore = (date: Date): string => {
         const philippineOffset = 8 * 60; // Philippines is UTC+8
@@ -26,15 +32,17 @@ const AppointmentCalendar = ({ selectedDate, setSelectedDate, disabledDates, onD
     };
 
     const handleDateChange: CalendarProps['onChange'] = (value) => {
-        if (value instanceof Date) {
-            onDateClick(value); // Call onDateClick when a date is clicked
-            setSelectedDate(value);
-        } else if (Array.isArray(value) && value.length === 2) {
-            onDateClick(value[0]); // Call onDateClick when a date is clicked
-            setSelectedDate(value[0]);
-        } else {
-            onDateClick(null); // Call onDateClick with null
-            setSelectedDate(null);
+        if (!disabled) { // Only allow date change if not disabled
+            if (value instanceof Date) {
+                onDateClick(value); // Call onDateClick when a date is clicked
+                setSelectedDate(value);
+            } else if (Array.isArray(value) && value.length === 2) {
+                onDateClick(value[0]); // Call onDateClick when a date is clicked
+                setSelectedDate(value[0]);
+            } else {
+                onDateClick(null); // Call onDateClick with null
+                setSelectedDate(null);
+            }
         }
     };
 
@@ -79,13 +87,13 @@ const AppointmentCalendar = ({ selectedDate, setSelectedDate, disabledDates, onD
     
 
     return (
-        <div className="p-4 max-w-md mx-auto w-[900px] h-[500px] relative">
+        <div className="w-full">
             <Calendar
                 onChange={handleDateChange}
                 value={selectedDate}
                 tileDisabled={tileDisabled} // Disable specific dates
                 tileClassName={tileClassName}
-                className="h-full w-full"
+                className="w-full"
                 calendarType='gregory'
             />
         </div>
