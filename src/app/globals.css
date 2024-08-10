@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import 'react-calendar/dist/Calendar.css';
 
 :root {
   --foreground-rgb: 0, 0, 0;
@@ -10,9 +11,9 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255;
-      --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --foreground-rgb: 0, 0, 0;
+      --background-start-rgb: 255, 255, 255;
+    --background-end-rgb: 255, 255, 255;
   }
 }
 
@@ -30,4 +31,75 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+
+  .rounded-bottom-left {
+    border-radius: 0% 100% 100% 0% / 47% 100% 0% 53%;
+  }
+
+  .hero-heading {
+    font-size: 2.3rem;
+    font-weight: 700;
+    line-height: 3.7rem;
+  }
+
+  .text-block {
+    display: block;
+  }
+
+  .react-calendar { 
+    width: 100%;
+    padding: 5px;
+    background-color: #fff;
+    color: #222;
+    border-radius: 8px;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 2.5em;
+  }
+
+  .calendar-tile {
+    @apply rounded-full transition-colors duration-200 ease-in-out h-16 m-5 leading-loose text-lg;
+  }
+
+  .calendar-tile:hover {
+    @apply bg-blue-50;
+  }
+
+  .calendar-tile--now {
+    @apply bg-blue-500 text-white;
+  }
+
+  .calendar-tile--active {
+    @apply bg-logo-color text-white;
+  }
+
+  .calendar-tile--disabled {
+    color: #a0a0a0; /* Gray text color */
+    background-color: transparent !important; /* No background color */
+}
+
+.calendar-tile--today {
+    color: blue !important;
+    background-color: transparent !important;
+}
+
+.calendar-tile--fully-booked {
+  color: #ffffff; /* White text color */
+  background-color: #ff4d4d8b !important; /* Red background color */
+}
+
+.loader {
+  border: 8px solid #f3f3f3; /* Light grey */
+  border-top: 8px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin-right: 5px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 }
