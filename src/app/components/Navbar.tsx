@@ -11,10 +11,10 @@ export const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
 
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    // const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-    const openModal = () => setIsModalOpen(true);
-    const closeModal = () => setIsModalOpen(false);
+    // const openModal = () => setIsModalOpen(true);
+    // const closeModal = () => setIsModalOpen(false);
 
     function getMenuClasses() {
         let menuClasses = [];
