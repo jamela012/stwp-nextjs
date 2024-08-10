@@ -4,11 +4,17 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { usePathname } from "next/navigation";
+import LoginForm from './Loginform';
 
 export const Navbar = () => {
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
 
     function getMenuClasses() {
         let menuClasses = [];
@@ -17,8 +23,10 @@ export const Navbar = () => {
             menuClasses = [
                 'flex',
                 'absolute',
-                'top-[80px]',
-                'bg-transparent',
+                'top-[73px]',
+                'bg-orange-100',
+                'bg-opacity-50',
+                'backdrop-blur-sm',
                 'text-black',
                 'w-full',
                 'p-4',
@@ -109,6 +117,13 @@ export const Navbar = () => {
                     <Link href="/contact-us" className={linkClass('/contact-us')}>
                         Contact Us
                     </Link>
+                    {/* <Link href="/login" className={`${linkClass('/login')} rounded-full bg-[#f85930cc] text-white text-center w-20 hover:text-white hover:bg-red-500`}>
+                        Login
+                    </Link> */}
+                    {/* <button className="rounded-full bg-[#f85930cc] text-white text-center w-20 hover:text-white hover:bg-red-500 mx-auto" onClick={openModal}>Login</button>
+                    <LoginForm isOpen={isModalOpen} onClose={closeModal} /> */}
+
+                    
                 </div>
 
                 <div className="md:hidden flex items-center">

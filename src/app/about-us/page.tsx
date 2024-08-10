@@ -35,26 +35,27 @@ export default function AboutUs() {
             <div className="bg-fixed bg-cover bg-center h-svh" style={{ backgroundImage: "url('/services/services-cover.jpg')" }}>
                 <div className="bg-black bg-opacity-40 h-screen flex items-center justify-center">
                     <div className="w-full sm:w-[40%] sm:pl-0 pl-10 h-56 flex justify-start items-center">
-                        <h1 className="text-white sm:text-5xl text-4xl font-medium">About Us</h1>
+                        <h1 className="text-white sm:text-6xl text-4xl font-medium">About Us</h1>
                     </div>
                 </div>
             </div>
 
             {/* Shepherd the Wedding Planner */}
-            <div className="w-[90%] mx-auto mt-12">
+            <div className="md:w-[80%] w-[90%] mx-auto mt-12">
                 <div className="flex flex-col-reverse md:flex-row bg-orange-50">
                     <div className="text-right flex flex-1 md:justify-start justify-center overflow-hidden">
                         <Image
-                            src={'/thumbnail.jpg'}
-                            alt={'wedding package'}
-                            width={500} 
-                            height={500} 
-                            className="w-[500px] h-[500px] rounded-tr-[100px]"
+                            src={'/home/wedding.jpg'}
+                            alt={'Shepherd The Wedding Planner'}
+                            width={600} 
+                            height={500}
+                            quality={100}
+                            className="w-[600px] h-[500px] rounded-tr-[100px]"
                         />
                     </div>
                     <div className="mt-4 p-10 flex flex-col flex-1  justify-center items-start">
                         <h1 className="text-3xl text-logo-color font-semibold mb-5">Shepherd The Wedding Planner</h1>
-                        <p className="text-sm font-light w-auto mb-5">
+                        <p className="text-md font-light w-auto mb-5">
                             Welcome to Shepherd The Wedding Planner, your premier event planning partner for crafting unforgettable experiences. With a keen eye for detail and a passion for perfection, we take pride in curating events that leave a lasting impression on you and your guests.
                         </p>
                     </div>
@@ -62,7 +63,7 @@ export default function AboutUs() {
             </div>
 
             {/* Why Choose Us */}
-            <div className="w-[90%] mx-auto mt-14">
+            <div className="md:w-[80%] w-[90%] mx-auto mt-14">
                 <div className="flex flex-col md:flex-row">
                     <div className="mt-4 p-10 flex flex-col flex-1  justify-center items-start">
                         <div className="p-4">
@@ -114,7 +115,7 @@ export default function AboutUs() {
                     </div>
                     <div className="text-right flex flex-1 md:justify-end justify-center overflow-hidden">
                         <Image
-                            src={'/thumbnail.jpg'}
+                            src={'/home/event.jpg'}
                             alt={'wedding package'}
                             width={600} 
                             height={600} 
@@ -125,17 +126,22 @@ export default function AboutUs() {
             </div>
 
             {/* What we have */}
-            <div className="w-[90%] mx-auto mt-14">
+            <div className="md:w-[80%] w-[90%] mx-auto mt-14">
                 <div className="flex flex-col md:flex-row">
-                    <div className="mt-4 p-5 flex flex-col flex-1 justify-between items-center">
-                        <h1 className="font-bold text-5xl text-center text-logo-color">What We Have</h1>
-                        <Image
-                            src={'/thumbnail.jpg'}
-                            alt={'wedding package'}
-                            width={500} 
-                            height={500} 
-                            className="w-[500px] h-[450px] rounded-t-[100px]"
-                        />
+                    <div className="mt-4 p-5 flex flex-col flex-1 justify-center items-center">
+                    <div className="border border-gray-300 justify-center bg-orange-50 flex items-center p-6 rounded-lg shadow-sm max-w-3xl mx-auto h-full w-full">
+                        <h1 className="text-4xl font-extrabold text-logo-color text-center">
+                            What We Have
+                        </h1>
+                    </div>
+
+                        {/* <Image
+                            src="/services/photos.jpg"
+                            alt="wedding package"
+                            width={500} // Aspect ratio reference width
+                            height={400} // Aspect ratio reference height
+                            className="w-full h-[500px] max-w-[500px] rounded-t-[100px] object-cover"
+                        /> */}
                     </div>
 
                     <div className="flex-1 space-y-6 p-5">

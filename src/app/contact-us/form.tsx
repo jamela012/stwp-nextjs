@@ -4,7 +4,7 @@ import { useState } from "react";
 import { db } from "../lib/firebase";
 import { collection, addDoc, Timestamp } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid'; // Import UUID for generating unique IDs
-
+import Swal from 'sweetalert2'; // Import SweetAlert2
 
 // Define the FormData type
 interface FormData {
@@ -20,13 +20,6 @@ interface FormData {
     read: boolean; // Add read field
 }
 
-// Define the dialog type
-interface Dialog {
-    isOpen: boolean;
-    message: string;
-    type: 'success' | 'error'; // Restrict type to 'success' or 'error'
-}
-
 export default function Form() {
     const [formData, setFormData] = useState<FormData>({
         id: uuidv4(), // Generate a unique ID
@@ -39,12 +32,6 @@ export default function Form() {
         message: '',
         createdAt: Timestamp.now(), // Initialize with current time
         read: false // Default value for read
-    });
-
-    const [dialog, setDialog] = useState<Dialog>({
-        isOpen: false,
-        message: '',
-        type: 'success' // Default type to 'success'
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -66,11 +53,16 @@ export default function Form() {
 
         try {
             await addDoc(collection(db, 'inquiries'), formData);
-            setDialog({
-                isOpen: true,
-                message: 'Message sent successfully!',
-                type: 'success',
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'Message sent successfully!',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Close'
             });
+
+            // Reset form data after successful submission
             setFormData({
                 id: uuidv4(), // Generate a new unique ID for the next form
                 name: '',
@@ -85,10 +77,13 @@ export default function Form() {
             });
         } catch (e) {
             console.error('Error adding document: ', e);
-            setDialog({
-                isOpen: true,
-                message: 'Failed to send message. Please try again.',
-                type: 'error',
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Failed to send message. Please try again.',
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'Close'
             });
         }
     };
@@ -182,28 +177,11 @@ export default function Form() {
                 <div className="flex justify-end">
                     <button
                         type="submit"
-                        className="text-white bg-btn-color hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-sm text-base w-full sm:w-auto p-4 text-center dark:bg-btn-color dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        className="text-white bg-btn-color hover:bg-orange-500 transition-colors duration-300 focus:ring-4 focus:outline-none font-medium rounded-sm text-base w-full sm:w-auto p-4 text-center dark:bg-btn-color">
                         Send Message
                     </button>
                 </div>
             </form>
-            {/* Dialog */}
-            {dialog.isOpen && (
-                <div className={`fixed inset-0 flex items-center justify-center ${dialog.type === 'success' ? 'bg-green-100' : 'bg-red-100'}`}>
-                    <div className={`bg-white p-6 rounded-lg shadow-lg ${dialog.type === 'success' ? 'border-green-500' : 'border-red-500'} border-2`}>
-                        <h2 className={`text-lg font-semibold ${dialog.type === 'success' ? 'text-green-700' : 'text-red-700'}`}>
-                            {dialog.type === 'success' ? 'Success!' : 'Error!'}
-                        </h2>
-                        <p className="mt-2">{dialog.message}</p>
-                        <button
-                            onClick={() => setDialog({ ...dialog, isOpen: false })}
-                            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                        >
-                            Close
-                        </button>
-                    </div>
-                </div>
-            )}
         </div>
     );
 }

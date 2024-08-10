@@ -14,7 +14,7 @@ const AccordionItem = ({ title, content, isOpen, toggleAccordion }: AccordionIte
     <div className="w-full border rounded-md mb-4">
         {/* Accordion Header */}
         <button
-            className="w-full flex justify-between items-center p-4 text-left border-b bg-gray-100"
+            className="w-full flex justify-between items-center p-4 text-left border-b bg-slate-50 border border-orange-300 hover:bg-orange-100 transition-colors duration-300 active:bg-orange-100"
             onClick={toggleAccordion}
         >
             <span>{title}</span>

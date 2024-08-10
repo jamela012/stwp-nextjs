@@ -19,11 +19,13 @@ import { Autoplay } from 'swiper/modules';
 export default function Home() {
 
   const images = [
-    '/thumbnail.jpg',
-    '/thumbnail.jpg',
-    '/thumbnail.jpg',
-    '/thumbnail.jpg',
-    '/thumbnail.jpg',
+    '/home/GLE_6600.jpg',
+    '/home/2.jpg',
+    '/home/DSC_1916.jpg',
+    '/home/DSC_9783.jpg',
+    '/home/JPV01766.jpg',
+    '/home/JPV01784.jpg',
+    '/home/lightss.jpg',
   ]
 
   return (
@@ -35,6 +37,7 @@ export default function Home() {
           alt={'cover'}
           fill
           style={{objectFit: 'cover'}}
+          quality={100}
           className="z-0"
         />
         <div className="bg-[rgba(165,126,87,0.9)] rounded-bottom-left w-[100%] sm:w-[510px] h-[550px] sm:h-[550px] absolute bottom-0 left-0 z-10 p-5 text-left">
@@ -46,12 +49,14 @@ export default function Home() {
               <span className="text-block">Perfect Place</span>
             </h1>
             <p className="text-lg mt-5">We will ensure that your special <span className="text-block">day shines the brightest.</span></p>
-            <button type="button" className="rounded-full mt-7 p-3 bg-white text-black text-sm flex items-center">
-              <p>Book Now</p>
-              <svg className="w-6 h-6 text-gray-800 dark:text-black" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M19 12H5m14 0-4 4m4-4-4-4"/>
-              </svg>
-            </button>
+            <Link href={'/contact-us'}>
+              <button type="button" className="rounded-full mt-7 p-3 bg-white text-black text-sm flex items-center">
+                <p>Learn More</p>
+                <svg className="w-6 h-6 text-gray-800 dark:text-black" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                  <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M19 12H5m14 0-4 4m4-4-4-4"/>
+                </svg>
+              </button>
+            </Link>
           </div>
         </div>
       </div>
@@ -68,7 +73,7 @@ export default function Home() {
           {/* Card 1 */}
           <div className="md:w-[382px] md:h-[478px] w-[350px] h-[400px] relative bg-gray-900 group m-2">
             <Image
-              src="/thumbnail.jpg"
+              src="/home/social.jpg"
               alt="Cover Image"
               fill
               style={{objectFit: 'cover'}}
@@ -87,7 +92,7 @@ export default function Home() {
           {/* Card 2 */}
           <div className="md:w-[382px] md:h-[478px] w-[350px] h-[400px] relative bg-gray-900 group m-2">
             <Image
-              src="/thumbnail.jpg"
+              src="/home/wedding.jpg"
               alt="Cover Image"
               fill
               style={{objectFit: 'cover'}}
@@ -106,7 +111,7 @@ export default function Home() {
           {/* Card 3 */}
           <div className="md:w-[382px] md:h-[478px] w-[350px] h-[400px] relative bg-gray-900 group m-2">
             <Image
-              src="/thumbnail.jpg"
+              src="/home/event.jpg"
               alt="Cover Image"
               fill
               style={{objectFit: 'cover'}}
@@ -148,7 +153,7 @@ export default function Home() {
           <div className="relative h-[300px] md:h-[500px] flex flex-1">
             <div className="w-[200px] h-[250px] md:w-[300px] md:h-[400px] absolute top-0 right-10 md:right-10 z-10 overflow-hidden transform transition-transform duration-300 ease-in-out hover:scale-110 sm:hover:z-30">
               <Image
-                src={'/thumbnail.jpg'}
+                src={'/home/JPV01766.jpg'}
                 alt="stwp image"
                 fill
                 style={{objectFit: 'cover'}}
@@ -156,7 +161,7 @@ export default function Home() {
             </div>
             <div className="w-[240px] h-[200px] md:w-[360px] md:h-[350px] absolute bottom-0 left-[-300px] xl:left-10 z-20 overflow-hidden transform transition-transform duration-300 ease-in-out hover:scale-110">
               <Image
-                src={'/thumbnail.jpg'}
+                src={'/home/GLE_7219.jpg'}
                 alt="stwp image"
                 fill
                 style={{objectFit: 'cover'}}
@@ -173,7 +178,7 @@ export default function Home() {
           Whether you&apos;re hosting a wedding, a birthday party, or any other milestone event, our dedicated team of expert planners
           <span className="lg:block inline">is here to turn your vision into a reality.</span>
         </p>
-        <div className="h-full w-10/12 mt-10">
+        <div className="h-[500px] w-10/12 mt-10">
           <Swiper
             slidesPerView={'auto'}
             centeredSlides={true}
@@ -194,9 +199,9 @@ export default function Home() {
                 <Image 
                   src={src}
                   alt={`Cover Image ${index + 1}`}
-                  width={300}
+                  width={400}
                   height={300}
-                  
+                  quality={100}
                   className="block stroke-black"
                 />
               </SwiperSlide>

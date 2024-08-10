@@ -77,13 +77,19 @@ export default function ContactUs() {
                             </div>
                             <div className="flex flex-col pt-2 pl-4">
                                 <h3 className="text-3xl">Email Us</h3>
-                                <p className="mt-2 sm:text-base text-sm">shepherd_weddplan@yahoo.com.ph</p>
+                                <a
+                                    href="mailto:shepherd_weddplan@yahoo.com.ph"
+                                    className="mt-2 sm:text-base text-sm hover:text-gray-500"
+                                >
+                                    shepherd_weddplan@yahoo.com.ph
+                                </a>
+
                             </div>
                         </div>
 
                         <div className="flex items-start w-full">
                             <Link href={'/booking'}>
-                                <button className="bg-btn-color text-white font-medium p-4 text-center text-lg">
+                                <button className="bg-btn-color text-white font-medium p-4 text-center text-lg hover:bg-orange-500 transition-colors duration-300">
                                     Book An Appointment
                                 </button>
                             </Link>
