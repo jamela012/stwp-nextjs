@@ -98,7 +98,7 @@ export async function POST(request: Request) {
                     <body>
                         <div class="container">
                             <div class="header">
-                                <img src="http://localhost:3000/shepherd-the-wedding-planner-logo.jpg" alt="Shepherd The Wedding Planner Logo" />
+                                <img src="/shepherd-the-wedding-planner-logo.jpg" alt="Shepherd The Wedding Planner Logo" />
                             </div>
                             <div class="content">
                                 <h2>Dear ${name},</h2>
@@ -115,8 +115,8 @@ export async function POST(request: Request) {
                                     <li><strong>Message:</strong> ${message}</li>
                                 </ul>
                                 <p>Thank you for booking with us!</p>
-                                <p><a href="http://localhost:3000/cancel-appointment?appointmentId=${appointmentId}">Cancel Appointment</a></p>
-                                <p><a href="http://localhost:3000/reschedule-appointment?appointmentId=${appointmentId}">Reschedule Appointment</a></p>
+                                <p><a href="/cancel-appointment?appointmentId=${appointmentId}">Cancel Appointment</a></p>
+                                <p><a href="/reschedule-appointment?appointmentId=${appointmentId}">Reschedule Appointment</a></p>
                             </div>
                             <div class="footer">
                                 <p>Shepherd The Wedding Planner<br />1234 Wedding Lane<br />Batangas, 4200 Batangas</p>

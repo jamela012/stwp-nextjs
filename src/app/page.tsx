@@ -2,7 +2,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import Faq from "./components/Faq"
-import { useRef, useState } from 'react';
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
 
