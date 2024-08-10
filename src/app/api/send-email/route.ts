@@ -44,9 +44,11 @@ export async function POST(request: Request) {
             },
         });
 
-        const baseURL = process.env.NODE_ENV === 'production'
-        ? process.env.NEXT_PUBLIC_PROD_URL
-        : process.env.NEXT_PUBLIC_DEV_URL;
+        // const baseURL = process.env.NODE_ENV === 'production'
+        // ? process.env.NEXT_PUBLIC_PROD_URL
+        // : process.env.NEXT_PUBLIC_DEV_URL;
+
+        const baseURL = process.env.NEXT_PUBLIC_DEV_URL;
         
 
         const mailOptions = {
