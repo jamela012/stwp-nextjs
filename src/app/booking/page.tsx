@@ -69,7 +69,7 @@ const AppointmentManager = () => {
             // Save the appointment to Firestore
             await addDoc(collection(db, 'appointments'), {
                 id: formData.id,
-                status: 'scheduled',
+                status: 'Scheduled',
                 date: formatDateToFirestore(new Date(formData.date)),
                 time: formData.time,
                 name: formData.name,
