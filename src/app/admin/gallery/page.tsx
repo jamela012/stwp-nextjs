@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
-import ImageGallery from '../components/ImageGallery';
-import ImageUpload from '../components/ImageUpload';
+import ImageGallery from './ImageGallery';
+import ImageUpload from './ImageUpload';
 import { db } from '@/app/lib/firebase';
 import { collection, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { Tab, Tabs, Box } from '@mui/material';
