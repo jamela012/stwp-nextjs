@@ -100,7 +100,7 @@ const RescheduleAppointment = () => {
             await updateDoc(appointmentRef, {
                 date: formattedDate, // Store the date in YYYY-MM-DD format
                 time: newTime,
-                status: 'rescheduled',
+                status: 'Rescheduled',
             });
 
             // Use SweetAlert for user feedback
@@ -110,7 +110,7 @@ const RescheduleAppointment = () => {
                 icon: 'success',
                 confirmButtonText: 'OK'
             }).then(() => {
-                router.push('/rescheduled');
+                router.push('/');
             });
         } catch (error) {
             console.error('Error rescheduling appointment:', error);

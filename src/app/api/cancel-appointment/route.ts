@@ -24,7 +24,7 @@ export async function POST(request: Request) {
 
         // Update the document with cancellation details
         await updateDoc(appointmentRef, {
-            status: 'canceled',
+            status: 'Canceled',
             cancellationReason: reason,
         });
 

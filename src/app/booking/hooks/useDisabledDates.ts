@@ -1,3 +1,5 @@
+// ./booking/hooks/useDisabledDates.ts
+
 import { useState, useEffect } from 'react';
 import { db } from '@/app/lib/firebase';
 import { collection, query, getDocs } from 'firebase/firestore';
