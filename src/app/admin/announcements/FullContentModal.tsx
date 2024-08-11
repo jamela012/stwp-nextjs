@@ -11,7 +11,7 @@ interface FullContentModalProps {
 const FullContentModal: FC<FullContentModalProps> = ({ announcement, onClose }) => {
     return (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-md shadow-lg w-full h-4xl max-w-5xl max-h-screen overflow-auto relative">
+            <div className="bg-white p-6 rounded-md shadow-lg w-full max-w-6xl max-h-screen overflow-scroll relative">
                 <button
                     onClick={onClose}
                     className="absolute top-4 right-4 bg-gray-500 text-white p-2 rounded-full hover:bg-gray-600"

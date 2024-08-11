@@ -52,9 +52,9 @@ export default function AdminAnnouncements() {
             <h2 className="text-2xl font-bold mb-4">Announcements</h2>
             <button
                 onClick={() => setIsCreateModalOpen(true)}
-                className="bg-blue-500 text-white p-2 rounded mb-4 hover:bg-blue-600"
+                className="bg-btn-color text-sm text-white p-2 rounded mb-4 hover:bg-blue-500"
             >
-                Create Announcement
+                Add Announcement
             </button>
             <AnnouncementList
                 announcements={announcements}

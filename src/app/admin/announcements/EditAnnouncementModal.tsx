@@ -123,7 +123,7 @@ const EditAnnouncementModal: FC<EditAnnouncementModalProps> = ({ announcement, o
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white p-8 rounded-lg shadow-lg w-full h-4xl max-w-5xl max-h-screen relative">
+            <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-6xl max-h-screen overflow-scroll relative">
                 <button
                     onClick={onClose}
                     className="absolute top-4 right-4 bg-gray-600 text-white p-2 rounded-full hover:bg-gray-700"
