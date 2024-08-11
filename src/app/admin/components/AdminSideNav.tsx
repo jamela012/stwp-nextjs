@@ -140,6 +140,8 @@ export default function AdminSideNav() {
 
                                     </button>
                                 </div>
+
+                                
                                 {/* <div
                                     className="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600"
                                     id="dropdown-user"
@@ -197,6 +199,8 @@ export default function AdminSideNav() {
                                         </li>
                                     </ul>
                                 </div> */}
+
+                                
                             </div>
                         </div>
                     </div>
@@ -204,7 +208,7 @@ export default function AdminSideNav() {
             </nav>
 
             <aside
-                ref={sidebarRef}
+                
                 id="logo-sidebar"
                 className={`fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform duration-300 ${
                     isOpen ? 'translate-x-0' : '-translate-x-full'
