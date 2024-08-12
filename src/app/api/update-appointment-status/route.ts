@@ -20,7 +20,7 @@ export async function POST(request: Request) {
         });
 
         // Base URL for links (adjust according to your environment)
-        const baseURL = process.env.NEXT_PUBLIC_DEV_URL;
+        const baseURL = process.env.NEXT_PUBLIC_PROD_URL;
 
         const mailOptions = {
             from: `"Shepherd The Wedding Planner" <${process.env.EMAIL_USER}>`,

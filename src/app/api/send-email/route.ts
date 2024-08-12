@@ -49,8 +49,8 @@ export async function POST(request: Request) {
         // : process.env.NEXT_PUBLIC_DEV_URL;
 
         // const baseURL = process.env.NEXT_PUBLIC_DEV_URL; //for dev
-        // const baseURL = process.env.NEXT_PUBLIC_PROD_URL; //for PROD
-        const baseURL = process.env.NEXT_PUBLIC_DEV_URL; //for LOCAL
+        const baseURL = process.env.NEXT_PUBLIC_PROD_URL; //for PROD
+        // const baseURL = process.env.NEXT_PUBLIC_DEV_URL; //for LOCAL
 
 
         const mailOptions = {
