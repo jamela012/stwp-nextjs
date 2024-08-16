@@ -5,7 +5,7 @@ import { updateAppointmentByIdField } from './appointmentService';
 import AppointmentCalendar from '@/app/booking/AppointmentCalendar';
 import TimeSlot from '@/app/booking/TimeSlot';
 import { useDisabledDates } from '../../booking/hooks/useDisabledDates';
-import { formatDateToFirestore } from '@/app/booking/utils/dateUtils'; // Import date formatting function
+import { formatDateToFirestore } from '@/app/booking/utils/dateUtils';// Import date formatting function
 
 interface ModalProps {
     isOpen: boolean;

@@ -88,7 +88,7 @@ export default function ContactUs() {
                         </div>
 
                         <div className="flex items-start w-full">
-                            <Link href={'/booking'}>
+                            <Link href={'/appointment'}>
                                 <button className="bg-btn-color text-white font-medium p-4 text-center text-lg hover:bg-orange-500 transition-colors duration-300">
                                     Book An Appointment
                                 </button>
