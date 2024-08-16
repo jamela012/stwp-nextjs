@@ -5,13 +5,16 @@ import { useState, useEffect, useRef } from 'react';
 import { db } from '@/app/lib/firebase';
 import { collection, query, onSnapshot, doc, updateDoc, where } from 'firebase/firestore';
 import { Inquiry } from '../inquiries/types';
-import InquiryModal from '../inquiries/InquiryModal';
+// import InquiryModal from '../inquiries/InquiryModal';
 import Link from 'next/link';
 import Image from 'next/image';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../lib/firebase'; // Adjust the import path
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
+import { getAuth } from 'firebase/auth';
+import { app } from '../../lib/firebase';
+
 
 export default function AdminSideNav() {
     const router = useRouter();
@@ -21,6 +24,15 @@ export default function AdminSideNav() {
     const [unreadCount, setUnreadCount] = useState(0);
     const [selectedInquiry, setSelectedInquiry] = useState<Inquiry | null>(null);
     const sidebarRef = useRef<HTMLDivElement>(null);
+
+    const [displayName, setDisplayName] = useState<string>('');
+
+    useEffect(() => {
+        const user = auth.currentUser;
+        if (user) {
+            setDisplayName(user.displayName || 'User');
+        }
+    }, []);
 
     const handleLogout = async () => {
         try {
@@ -118,27 +130,35 @@ export default function AdminSideNav() {
                         <div className="flex items-center">
                             <div className="flex items-center ms-3">
                                 <div>
-                                    <button
-                                        type="button"
-                                        className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-                                        aria-expanded="false"
-                                        data-dropdown-toggle="dropdown-user"
-                                    >
-                                        <span className="sr-only">Open user menu</span>
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            strokeWidth="1.5"
-                                            stroke="white"
-                                            className="size-6">
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                        </svg>
+                                    <div className="relative group">
+                                        <button
+                                            type="button"
+                                            className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                                            aria-expanded="false"
+                                            data-dropdown-toggle="dropdown-user"
+                                        >
+                                            <span className="sr-only">Open user menu</span>
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                strokeWidth="1.5"
+                                                stroke="white"
+                                                className="w-6 h-6"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                                                />
+                                            </svg>
+                                        </button>
 
-                                    </button>
+                                        {/* Tooltip */}
+                                        <div className="absolute right-2 transform -translate-x-5 top-10 mb-2 w-max opacity-0 group-hover:opacity-100 bg-black text-white text-xs rounded-md px-2 py-1 transition-opacity duration-300">
+                                            {displayName}
+                                        </div>
+                                    </div>
                                 </div>
 
 
@@ -236,7 +256,8 @@ export default function AdminSideNav() {
                                 <span className="ms-3">Dashboard</span>
                             </Link>
                         </li>
-                        <li>
+                        {/* APPOINTMENT */}
+                        {/* <li>
                             <Link
                                 href="/admin/appointments"
                                 onClick={handleLinkClick}
@@ -254,7 +275,7 @@ export default function AdminSideNav() {
 
                                 <span className="flex-1 ms-3 whitespace-nowrap">Appointments</span>
                             </Link>
-                        </li>
+                        </li> */}
                         <li>
                             <Link
                                 href="/admin/gallery"
@@ -328,14 +349,14 @@ export default function AdminSideNav() {
                                 className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white ${pathname === '/admin/account-setting' ? 'bg-gray-100 dark:bg-gray-700' : 'hover:bg-gray-100 dark:hover:bg-gray-700'
                                     } group`}
                             >
-                                <svg 
-                                    className="flex-shrink-0 w-6 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" 
-                                    aria-hidden="true" 
-                                    xmlns="http://www.w3.org/2000/svg" 
-                                    fill="currentColor" 
+                                <svg
+                                    className="flex-shrink-0 w-6 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                                    aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="currentColor"
                                     viewBox="0 0 20 20"
                                 >
-                                    <path 
+                                    <path
                                         d="M17 10v1.126c.367.095.714.24 1.032.428l.796-.797 1.415 1.415-.797.796c.188.318.333.665.428 1.032H21v2h-1.126c-.095.367-.24.714-.428 1.032l.797.796-1.415 1.415-.796-.797a3.979 3.979 0 0 1-1.032.428V20h-2v-1.126a3.977 3.977 0 0 1-1.032-.428l-.796.797-1.415-1.415.797-.796A3.975 3.975 0 0 1 12.126 16H11v-2h1.126c.095-.367.24-.714.428-1.032l-.797-.796 1.415-1.415.796.797A3.977 3.977 0 0 1 15 11.126V10h2Zm.406 3.578.016.016c.354.358.574.85.578 1.392v.028a2 2 0 0 1-3.409 1.406l-.01-.012a2 2 0 0 1 2.826-2.83ZM5 8a4 4 0 1 1 7.938.703 7.029 7.029 0 0 0-3.235 3.235A4 4 0 0 1 5 8Zm4.29 5H7a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h6.101A6.979 6.979 0 0 1 9 15c0-.695.101-1.366.29-2Z"
                                     />
                                 </svg>
