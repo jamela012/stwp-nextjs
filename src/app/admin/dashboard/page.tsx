@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { FaEnvelope, FaBullhorn, FaCalendarAlt, FaImages } from 'react-icons/fa';
 import { db } from '@/app/lib/firebase';
 import { collection, onSnapshot, orderBy, query, where, limit } from 'firebase/firestore';
-import { formatDateToFirestore } from '@/app/booking/utils/dateUtils'; // Import your date utility function
+import { formatDateToFirestore } from '@/app/utils/dateUtils';
 import { Timestamp } from 'firebase/firestore';
 
 function formatTimestampToDateString(timestamp: { toDate: () => any; }) {
