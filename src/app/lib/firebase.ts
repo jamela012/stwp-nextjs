@@ -51,4 +51,4 @@ const onUserAuthStateChanged = (callback: (user: any) => void): (() => void) => 
     return onAuthStateChanged(auth, callback);
 };
 
-export { auth, analytics, db, storage, signIn, signUp, signOutUser, onUserAuthStateChanged };
+export { auth, analytics, db, storage, signIn, signUp, signOutUser, onUserAuthStateChanged, app };
