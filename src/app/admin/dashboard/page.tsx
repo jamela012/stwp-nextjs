@@ -33,10 +33,10 @@ function formatTimestampToDateString(timestamp: { toDate: () => any; }) {
 export default function AdminDashboard() {
     const [totalInquiries, setTotalInquiries] = useState(0);
     const [unreadInquiries, setUnreadInquiries] = useState(0);
-    const [upcomingAppointments, setUpcomingAppointments] = useState(0);
+    // const [upcomingAppointments, setUpcomingAppointments] = useState(0);
     const [totalAnnouncements, setTotalAnnouncements] = useState(0);
     const [totalGalleryImages, setTotalGalleryImages] = useState(0);
-    const [topAppointments, setTopAppointments] = useState<any[]>([]);
+    // const [topAppointments, setTopAppointments] = useState<any[]>([]);
     const [recentInquiries, setRecentInquiries] = useState<any[]>([]);
 
     useEffect(() => {
@@ -57,19 +57,19 @@ export default function AdminDashboard() {
         );
 
         // Listen for changes in the appointments collection
-        const appointmentsCollection = collection(db, 'appointments');
-        const today = new Date();
-        const todayString = formatDateToFirestore(today);
+        // const appointmentsCollection = collection(db, 'appointments');
+        // const today = new Date();
+        // const todayString = formatDateToFirestore(today);
 
-        const unsubscribeAppointments = onSnapshot(
-            query(appointmentsCollection, where('date', '>=', todayString), orderBy('date', 'asc'), limit(5)),
-            snapshot => {
-                setUpcomingAppointments(snapshot.size);
+        // const unsubscribeAppointments = onSnapshot(
+        //     query(appointmentsCollection, where('date', '>=', todayString), orderBy('date', 'asc'), limit(5)),
+        //     snapshot => {
+        //         setUpcomingAppointments(snapshot.size);
 
-                const topAppointmentsData = snapshot.docs.map(doc => doc.data());
-                setTopAppointments(topAppointmentsData);
-            }
-        );
+        //         const topAppointmentsData = snapshot.docs.map(doc => doc.data());
+        //         setTopAppointments(topAppointmentsData);
+        //     }
+        // );
 
         // Listen for changes in the announcements collection
         const announcementsCollection = collection(db, 'announcements');
@@ -86,7 +86,7 @@ export default function AdminDashboard() {
         // Cleanup subscriptions on component unmount
         return () => {
             unsubscribeInquiries();
-            unsubscribeAppointments();
+            // unsubscribeAppointments();
             unsubscribeAnnouncements();
             unsubscribeGalleryImages();
         };
@@ -98,7 +98,7 @@ export default function AdminDashboard() {
                 <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
             </header>
 
-            <section className="grid grid-cols-1 gap-6 mb-8 md:grid-cols-2 lg:grid-cols-4">
+            <section className="grid grid-cols-1 gap-6 mb-8 md:grid-cols-2 lg:grid-cols-3">
                 {/* Stats Overview */}
                 <div className="bg-white p-4 rounded-lg shadow-md flex items-center justify-between">
                     <div>
@@ -109,13 +109,15 @@ export default function AdminDashboard() {
                     <FaEnvelope className="text-blue-600 text-3xl" />
                 </div>
 
-                <div className="bg-white p-4 rounded-lg shadow-md flex items-center justify-between">
+
+                {/* APPOINTMENT */}
+                {/* <div className="bg-white p-4 rounded-lg shadow-md flex items-center justify-between">
                     <div>
                         <h2 className="text-sm font-medium text-gray-600">Upcoming Appointments</h2>
                         <p className="text-2xl font-semibold text-gray-900">{upcomingAppointments}</p>
                     </div>
                     <FaCalendarAlt className="text-green-600 text-3xl" />
-                </div>
+                </div> */}
 
                 <div className="bg-white p-4 rounded-lg shadow-md flex items-center justify-between">
                     <div>
@@ -134,7 +136,7 @@ export default function AdminDashboard() {
                 </div>
             </section>
 
-            <main className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <main className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {/* Inquiries */}
                 <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
                     <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
@@ -158,7 +160,7 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Appointments */}
-                <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+                {/* <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
                     <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
                         <FaCalendarAlt className="text-green-600 mr-2" /> Appointments
                     </h2>
@@ -166,7 +168,7 @@ export default function AdminDashboard() {
                     <div className="mt-4">
                         <a href="/admin/appointments" className="text-blue-600 hover:underline">View Appointments</a>
                     </div>
-                </div>
+                </div> */}
 
                 {/* Gallery */}
                 <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
@@ -183,7 +185,7 @@ export default function AdminDashboard() {
             {/* Appointments and Inquiries Section */}
             <section className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 mt-10">
                 {/* Upcoming Appointments */}
-                <div className="bg-white p-4 rounded-lg shadow-md">
+                {/* <div className="bg-white p-4 rounded-lg shadow-md">
                     <h2 className="text-xl font-semibold text-gray-900 mb-4 border-b pb-2">Upcoming Appointments</h2>
                     <div>
                         {topAppointments.length === 0 ? (
@@ -210,7 +212,7 @@ export default function AdminDashboard() {
                             </ul>
                         )}
                     </div>
-                </div>
+                </div> */}
 
                 {/* Recent Inquiries */}
                 <div className="bg-white p-4 rounded-lg shadow-md">
